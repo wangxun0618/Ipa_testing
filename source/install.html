@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>安装 爱聊</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    h2 {
+      font-size: 2.5em;
+      margin-bottom: 30px;
+    }
+    a {
+      display: inline-block;
+      padding: 15px 30px;
+      font-size: 1.5em;
+      background-color: #007AFF;
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      transition: background-color 0.3s;
+    }
+    a:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h2>点击安装应用</h2>
+  <a id="installBtn">安装 爱聊</a>
+  <div id="debug" style="margin-top:20px; font-size:14px; color:#333;"></div>
+
+  <script>
+  (function() {
+      
+      const protocol = "https:";
+      const hostname = location.hostname; // 不带端口
+      const host = location.host;
+
+      // 访问时自动更新 IP
+      fetch('/update_ip.sh')
+            .then(res => res.text())
+            .then(txt => {
+              console.log(txt);
+            })
+            .catch(err => console.error(err));
+      
+      const plist = `${protocol}//${hostname}/app.plist`;
+      const url = `itms-services://?action=download-manifest&url=${plist}`;
+
+      // 控制台打印
+      console.log("location.href:", location.href);
+      console.log("protocol:", protocol);
+      console.log("host:", host);
+      console.log("hostname:", hostname);
+      console.log("plist:", plist);
+      console.log("install url:", url);
+
+      // 页面显示（关键）
+      const debugEl = document.getElementById("debug");
+      debugEl.innerHTML = `
+          <p><b>当前页面:</b> ${location.href}</p>
+          <p><b>protocol:</b> ${protocol}</p>
+          <p><b>host:</b> ${host}</p>
+          <p><b>hostname:</b> ${hostname}</p>
+          <p><b>plist:</b> ${plist}</p>
+      `;
+
+      // 设置按钮
+      const btn = document.getElementById("installBtn");
+      if (btn) {
+          btn.href = url;
+      }
+  })();
+  </script>
+</body>
+</html>
